@@ -1,0 +1,13 @@
+{
+  "name": "Gestao Web",
+  "version": "1.0.0",
+  "description": "Projeto Gestão Web",
+  "main": "src/index.html",
+  "scripts": {
+  "cy:open": "cypress open", 
+  "test": "cypress run","test:cloud": "cypress run --record"
+},
+  "devDependencies": {
+    "cypress": "^13.14.2"
+  }
+}
