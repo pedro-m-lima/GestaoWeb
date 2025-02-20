@@ -1,7 +1,6 @@
 describe('Lista de preço', ()=>{
 
     beforeEach(()=>{
-        cy.visit('/')
         cy.logar('devgestao@mercosistem.com.br', '123456')
     })
 

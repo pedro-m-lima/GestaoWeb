@@ -6,7 +6,6 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 describe('Cadastro de equipe',()=>{
 
     beforeEach(()=>{
-        cy.visit('/')
         cy.logar('devgestao@mercosistem.com.br', '123456')
     })
 
@@ -22,18 +21,10 @@ describe('Cadastro de equipe',()=>{
         cy.validaCabecalhoTela('Equipes', 'Consulta'); 
 
         //Act
-        cy.get('button[data-testid="button-click-new-register"]')
-            .click()
+        cy.get('button[data-testid="button-click-new-register"]').click()
         cy.wait(500)
         cy.validaCabecalhoTela('Equipes', 'Novo Cadastro');
-        cy.get('#name').type(dadosEquipe.nomeEquipe)
-        cy.get('#status').click()
-        cy.contains('div ul li[role="option"]', dadosEquipe.statusEquipe).click()
-        cy.get('div[data-testid="input-form-observation"] #observation')
-            .type(dadosEquipe.obsEquipe)
-        cy.get('button[data-testid="button-click-save"]')
-            .click()
-        cy.wait(500)
+        cy.preencheDadosCadastroEquipe(dadosEquipe.nomeEquipe, dadosEquipe.statusEquipe, dadosEquipe.obsEquipe)
         cy.validaToast('success', 'Equipe salva com sucesso')
         cy.validaCabecalhoTela('Equipes', 'Consulta');
 
@@ -61,23 +52,12 @@ describe('Cadastro de equipe',()=>{
             .click()
         cy.wait(500)
         cy.validaCabecalhoTela('Equipes', 'Novo Cadastro');
-        cy.get('#name').type(dadosEquipe.nomeEquipe)
-        cy.get('#status').click()
-        cy.contains('div ul li[role="option"]', dadosEquipe.statusEquipe).click()
-        cy.get('div[data-testid="input-form-observation"] #observation')
-            .type(dadosEquipe.obsEquipe)
-        cy.get('button[data-testid="button-click-save"]')
-            .click()
-        cy.wait(500)
+        cy.preencheDadosCadastroEquipe(dadosEquipe.nomeEquipe, dadosEquipe.statusEquipe, dadosEquipe.obsEquipe)
         cy.validaToast('success', 'Equipe salva com sucesso')
         cy.validaCabecalhoTela('Equipes', 'Consulta');
 
         //Assert
         cy.pesquisaEquipe(dadosEquipe.nomeEquipe, dadosEquipe.statusEquipe)
-        
-        cy.get('[data-testid="button-click-search"]')
-            .click()
-        cy.wait(500)
         cy.get('.MuiDataGrid-main div[data-rowindex="0"]')
             .should('include.text', dadosEquipe.nomeEquipe)
 
@@ -86,7 +66,7 @@ describe('Cadastro de equipe',()=>{
 
     })
 
-    it('Alterar cadastro de Equipe', ()=>{
+    it.only('Alterar cadastro de Equipe', ()=>{
         //Arrange
         const dadosEquipe = {
             nomeEquipe: 'TESTE EQUIPE AUT ALTERACAO',
@@ -102,7 +82,7 @@ describe('Cadastro de equipe',()=>{
             .click();
         cy.wait(500);
         cy.validaCabecalhoTela('Equipes', 'Novo Cadastro');
-        cy.preencherDadosCadastroEquipe(dadosEquipe.nomeEquipe, dadosEquipe.statusEquipe, dadosEquipe.obsEquipe);
+        cy.preencheDadosCadastroEquipe(dadosEquipe.nomeEquipe, dadosEquipe.statusEquipe, dadosEquipe.obsEquipe);
         cy.validaToast('success', 'Equipe salva com sucesso');
         cy.validaCabecalhoTela('Equipes', 'Consulta');
         cy.pesquisaEquipe(dadosEquipe.nomeEquipe)
@@ -112,17 +92,8 @@ describe('Cadastro de equipe',()=>{
         //Act
         cy.get('.MuiDataGrid-main div[data-rowindex="0"] div[data-testid^="button-click-edit"]').click()
         cy.validaCabecalhoTela('Equipes', 'Consulta');
-        cy.get('#name')
-            .should('have.value', dadosEquipe.nomeEquipe)  
-            .clear()
-            .should('have.value', '') 
-            .type(dadosEquipe.nomeEquipeAlterada)
-        cy.get('#status').click()
-        cy.contains('div ul li[role="option"]', dadosEquipe.statusEquipeAlterada).click()
-        cy.get('div[data-testid="input-form-observation"] #observation')
-            .type(dadosEquipe.obsEquipeAlterada)
-        cy.get('button[data-testid="button-click-save"]').click()
-        cy.wait(500)
+        cy.limpaCamposEquipe(dadosEquipe.nomeEquipe, dadosEquipe.obsEquipe)
+        cy.preencheDadosCadastroEquipe(dadosEquipe.nomeEquipeAlterada, dadosEquipe.statusEquipeAlterada, dadosEquipe.obsEquipeAlterada);
         cy.validaToast('success', 'Equipe salva com sucesso')
         cy.validaCabecalhoTela('Equipes', 'Consulta');
 
@@ -150,7 +121,7 @@ describe('Cadastro de equipe',()=>{
             .click();
         cy.wait(500);
         cy.validaCabecalhoTela('Equipes', 'Novo Cadastro');
-        cy.preencherDadosCadastroEquipe(dadosEquipe.nomeEquipe, dadosEquipe.statusEquipe, dadosEquipe.obsEquipe);
+        cy.preencheDadosCadastroEquipe(dadosEquipe.nomeEquipe, dadosEquipe.statusEquipe, dadosEquipe.obsEquipe);
         cy.validaToast('success', 'Equipe salva com sucesso');
         cy.validaCabecalhoTela('Equipes', 'Consulta');
         
@@ -169,13 +140,4 @@ describe('Cadastro de equipe',()=>{
 
     })
     
-})
-
-Cypress.Commands.add('excluirEquipe', (nomeEquipe)=>{
-    cy.get('.MuiDataGrid-main div[data-rowindex="0"] div[data-testid^="button-click-remove"]').click()
-        cy.get('div [role="dialog"] p')
-            .should('include.text', nomeEquipe)
-        cy.get('[data-testid="button-click-excluir"]')
-            .click()
-        cy.validaToast('success', 'Equipe excluída com sucesso')
 })

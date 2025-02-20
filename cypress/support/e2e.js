@@ -14,7 +14,10 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
-
+import './pages/cListaDePreco'
+import './pages/cEquipe'
+import './pages/cLogin'
+import './pages/components/cCabecalho'
+import './pages/components/cMenu'
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
